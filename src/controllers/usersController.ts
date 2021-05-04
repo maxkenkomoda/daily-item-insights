@@ -23,7 +23,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     const name = req.body.name as string
     if(!name) throw new Error('name is invalid')
     const newUserInfo = await newUser(name)
-
+    if(!newUserInfo) throw new Error('Something wrong')
     res.send(newUserInfo)
   } catch(error) {
     console.error(error)
