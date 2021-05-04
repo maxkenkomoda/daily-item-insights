@@ -1,0 +1,4 @@
+/node_modules
+/dist
+logfile
+.env
