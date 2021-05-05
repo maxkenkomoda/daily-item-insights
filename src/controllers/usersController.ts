@@ -1,14 +1,14 @@
 import { Request, Response } from 'express'
-import { newUser, showUser } from '../models/usersModel'
+import { UsersModel } from '../models/usersModel'
 
-export const getUser = async (req: Request, res: Response): Promise<void> => {
+export const showUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const name =  req.params.user as string
-    if(!name) throw new Error('name is invalid')
-    const userInfo = await showUser(name)
-    if(!userInfo) throw new Error('no user found')
+    const name = req.params.user as string
+    if (!name) throw new Error('name is invalid')
+    const userInfo = await UsersModel.getUser(name)
+    if (!userInfo) throw new Error('no user found')
     res.send(userInfo)
-  } catch(error) {
+  } catch (error) {
     console.error(error)
     res.status(400)
     res.send({
@@ -18,14 +18,17 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export const createUser = async (req: Request, res: Response): Promise<void> => {
+export const newUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const name = req.body.name as string
-    if(!name) throw new Error('name is invalid')
-    const newUserInfo = await newUser(name)
-    if(!newUserInfo) throw new Error('Something wrong')
-    res.send(newUserInfo)
-  } catch(error) {
+    if (!name) throw new Error('name is invalid')
+    const newUserInfo = await UsersModel.createUser(name)
+    if (!newUserInfo) throw new Error('Something wrong')
+    res.json(newUserInfo)
+  } catch (error) {
     console.error(error)
     res.status(400)
     res.send({

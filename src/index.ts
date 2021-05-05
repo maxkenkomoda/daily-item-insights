@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import { createUser, getUser } from './controllers/usersController'
-import { createItem, deleteItem, getAllItems, getItem, updateItem } from './controllers/itemsController'
+import { newUser, showUser } from './controllers/usersController'
+import { newItem, showAllItems, showItem } from './controllers/itemsController'
 import { createItemRecords } from './controllers/itemsRecordsController'
 
 
@@ -13,21 +13,22 @@ app.route('/')
   .get((req, res) => {
     res.send('welcome to daily item insights!')
   })
-  .post(createUser)
+  .post(newUser)
 
 app.route('/:user')
-  .get(getUser)
+  .get(showUser)
 
-app.route(':user/items')
-  .get(getAllItems)
-  .post(createItem)
 
-app.route(':user/items/:id')
-  .get(getItem)
-  .delete(deleteItem)
-  .patch(updateItem)
+app.route('/:user/items')
+  .get(showAllItems)
+  .post(newItem)
 
-app.route(':user/items/:id/record')
+app.route('/:user/items/:id')
+  .get(showItem)
+  // .delete(deleteItem)
+  // .patch(updateItem)
+
+app.route('/:user/items/:id/record')
   .post(createItemRecords)
 
 
