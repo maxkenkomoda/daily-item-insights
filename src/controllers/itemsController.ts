@@ -25,9 +25,9 @@ export const newItem = async (req: Request, res: Response): Promise<void> => {
     if (!itemName) throw new Error('item name is invalid')
     if (!itemNumber || itemNumber === NaN)
       throw new Error('item name is invalid')
-    const newItem = await ItemsModel.createItem(itemName, userName, itemNumber)
-    if (!newItem) throw new Error('Something Wrong')
-    res.json(newItem)
+    const newItemData = await ItemsModel.createItem(itemName, userName, itemNumber)
+    if (!newItemData) throw new Error('Something Wrong')
+    res.json(newItemData)
   } catch (error) {
     console.error(error)
     res.status(400)
@@ -62,6 +62,7 @@ export const showAllItems = async (
 ): Promise<void> => {
   try {
     const userName = req.params.user as string
+    if (!userName) throw new Error('name is invalid')
     const allItems = await ItemsModel.getAllItems(userName)
     res.json(allItems)
   } catch (error) {
@@ -74,6 +75,29 @@ export const showAllItems = async (
   }
 }
 
+export const newItemsRecord = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userName = req.params.user as string
+    const itemId = Number(req.params.id)
+    const itemNumber = Number(req.body.number)
+    if (!userName) throw new Error('name is invalid')
+    if (!itemId || itemId === NaN) throw new Error('item id is invalid')
+    if (!itemNumber || itemNumber === NaN)
+      throw new Error('item name is invalid')
+    const newItemsRecordData = await ItemsModel.createNewItemsRecord(userName, itemId, itemNumber)
+    res.json(newItemsRecordData)
+  } catch (error) {
+    console.error(error)
+    res.status(400)
+    res.send({
+      status: 'error',
+      message: error.message,
+    })
+  }
+}
 // export const updateItem = async (
 //   req: Request,
 //   res: Response

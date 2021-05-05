@@ -1,8 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import { newUser, showUser } from './controllers/usersController'
-import { newItem, showAllItems, showItem } from './controllers/itemsController'
-import { createItemRecords } from './controllers/itemsRecordsController'
+import { newItem, newItemsRecord, showAllItems, showItem } from './controllers/itemsController'
 
 
 const app = express()
@@ -28,8 +27,8 @@ app.route('/:user/items/:id')
   // .delete(deleteItem)
   // .patch(updateItem)
 
-app.route('/:user/items/:id/record')
-  .post(createItemRecords)
+app.route('/:user/items/:id')
+  .post(newItemsRecord)
 
 
 app.listen(3000)

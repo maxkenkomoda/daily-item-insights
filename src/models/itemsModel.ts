@@ -59,4 +59,24 @@ export class ItemsModel extends UsersModel {
       return allItems
     }
   }
+
+  public static async createNewItemsRecord(userName: string, itemId: number, itemNumber: number){
+    const userId = await this.getUserId(userName)
+    return await prisma.users_items.update({
+      where: {
+        id: itemId
+      },
+      data: {
+        nextBuy: 49,
+        items_records: {
+          create: {
+            number: itemNumber
+          }
+        }
+      },
+      include: {
+        items_records: true
+      }
+    })
+  }
 }
