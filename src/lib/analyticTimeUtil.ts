@@ -19,7 +19,7 @@ export class AnalyticRecords {
     }
     let sum = 0
     results.forEach(n => {
-      sum + n
+      sum = sum + n
     })
     const averageDay = sum / results.length
     const recommendDate = dataList[dataList.length - 1].boughtDate.add(averageDay, 'days').format()

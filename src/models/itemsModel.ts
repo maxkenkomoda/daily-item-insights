@@ -110,4 +110,15 @@ export class ItemsModel extends UsersModel {
       }
     })
   }
+
+  public static async updateRecordData(itemId: number, itemRecordId: number, newDate: string) {
+    return await prisma.items_records.update({
+      where: {
+        id: itemRecordId
+      },
+      data: {
+        bought_time: new Date(newDate)
+      }
+    })
+  }
 }

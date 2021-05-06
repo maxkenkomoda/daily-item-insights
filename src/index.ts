@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import { newUser, showUser } from './controllers/usersController'
-import { newItem, newItemsRecord, showAllItems, showItem } from './controllers/itemsController'
+import { newItem, newItemsRecord, showAllItems, showItem, updateItemRecord } from './controllers/itemsController'
 
 
 const app = express()
@@ -28,5 +28,6 @@ app.route('/:user/items/:id')
   // .patch(updateItem)
 
 
+app.patch('/:user/items/:id/:recordId', updateItemRecord)
 
 app.listen(3000)
