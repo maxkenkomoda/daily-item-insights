@@ -1,4 +1,5 @@
 import { query, Request, Response } from 'express'
+import moment from 'moment'
 import { ItemsModel } from '../models/itemsModel'
 
 export const getAllItems = async (
@@ -21,11 +22,21 @@ export const newItem = async (req: Request, res: Response): Promise<void> => {
     const itemName = req.body.name as string
     const itemNumber = Number(req.body.number)
     const userName = req.params.user as string
+    const nextBuyDate = req.body.nextBuyDate as string
+    const isCorrectFormat =
+      moment(nextBuyDate, 'YYYY-MM-DD').format('YYYY-MM-DD') === nextBuyDate
     if (!userName) throw new Error('name is invalid')
     if (!itemName) throw new Error('item name is invalid')
+    if (!nextBuyDate || !isCorrectFormat)
+      throw new Error('next buy date is invalid')
     if (!itemNumber || itemNumber === NaN)
       throw new Error('item name is invalid')
-    const newItemData = await ItemsModel.createItem(itemName, userName, itemNumber)
+    const newItemData = await ItemsModel.createItem(
+      itemName,
+      userName,
+      itemNumber,
+      nextBuyDate
+    )
     if (!newItemData) throw new Error('Something Wrong')
     res.json(newItemData)
   } catch (error) {
@@ -87,7 +98,11 @@ export const newItemsRecord = async (
     if (!itemId || itemId === NaN) throw new Error('item id is invalid')
     if (!itemNumber || itemNumber === NaN)
       throw new Error('item name is invalid')
-    const newItemsRecordData = await ItemsModel.createNewItemsRecord(userName, itemId, itemNumber)
+    const newItemsRecordData = await ItemsModel.createNewItemsRecord(
+      userName,
+      itemId,
+      itemNumber
+    )
     res.send(newItemsRecordData)
   } catch (error) {
     console.error(error)

@@ -8,6 +8,7 @@
     "init:project": "mkdir src && touch src/index.ts",
     "init:test": "mkdir test && touch test/index.ts",
     "dev:watch": "tsc-watch --onSuccess 'node dist/index.js' ",
+    "prisma:migrate": "npx prisma migrate dev --name init",
     "clean": "rimraf dist/*",
     "tsc": "tsc",
     "build": "npm-run-all clean tsc",

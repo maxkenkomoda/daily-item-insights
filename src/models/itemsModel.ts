@@ -8,15 +8,17 @@ const prisma = new PrismaClient()
 
 export class ItemsModel extends UsersModel {
 
-  public static async createItem (itemName: string, userName: string, number: number) {
+  public static async createItem (itemName: string, userName: string, number: number, nextBuyDate: string) {
     const userId = await this.getUserId(userName)
     return await prisma.users_items.create({
       data:{
         userId: userId,
         name: itemName,
+        nextBuyDate: new Date(nextBuyDate),
         items_records: {
           create: {
-            number: number
+            number: number,
+            bought_time: new Date()
           }
         }
       }
@@ -62,35 +64,50 @@ export class ItemsModel extends UsersModel {
     }
   }
 
+  // public static async createNewItemsRecord(userName: string, itemId: number, itemNumber: number){
+  //   const userId = await this.getUserId(userName)
+  //   return await prisma.users_items.update({
+  //     where: {
+  //       id: itemId
+  //     },
+  //     data: {
+  //       nextBuy: new Date('2020-01-02'),
+  //       items_records: {
+  //         create: {
+  //           number: itemNumber
+  //         }
+  //       }
+  //     },
+  //     include: {
+  //       items_records: true
+  //     }
+  //   })
+  // }
+
   public static async createNewItemsRecord(userName: string, itemId: number, itemNumber: number){
     const userId = await this.getUserId(userName)
-    await prisma.items_records.create({
-      data:{
-        itemId: itemId,
-        number: itemNumber
-      }
-    })
-
-    const allRecords =  await prisma.items_records.findMany({
+    const allItemsRecords =  await prisma.items_records.findMany({
       where: {
         itemId: itemId
       }
     }) as unknown as itemRecord[]
+    const nextDate = await AnalyticRecords.calculateAverage(allItemsRecords, itemNumber)
 
-    const nextDate = await AnalyticRecords.calculateAverage(allRecords)
-    console.log(nextDate)
-    return nextDate
-
-
-    // const updateItem = prisma.users_items.update({
-    //   where: {
-    //     id: itemId
-    //   },
-    //   data: {
-    //     nextBuy: 'hoge'
-    //   }
-    // })
-
-
+    return await prisma.users_items.update({
+      where: {
+        id: itemId
+      },
+      data: {
+        nextBuyDate: new Date(nextDate),
+        items_records: {
+          create: {
+            number: itemNumber
+          }
+        }
+      },
+      include: {
+        items_records: true
+      }
+    })
   }
 }

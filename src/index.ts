@@ -13,10 +13,8 @@ app.route('/')
     res.send('welcome to daily item insights!')
   })
 
-
-app.route('/:user')
-  .get(showUser)
-  .post(newUser)
+app.post('/user', newUser)
+app.get('/:user', showUser)
 
 
 app.route('/:user/items')
