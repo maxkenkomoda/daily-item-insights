@@ -12,10 +12,11 @@ app.route('/')
   .get((req, res) => {
     res.send('welcome to daily item insights!')
   })
-  .post(newUser)
+
 
 app.route('/:user')
   .get(showUser)
+  .post(newUser)
 
 
 app.route('/:user/items')
@@ -24,11 +25,10 @@ app.route('/:user/items')
 
 app.route('/:user/items/:id')
   .get(showItem)
+  .post(newItemsRecord)
   // .delete(deleteItem)
   // .patch(updateItem)
 
-app.route('/:user/items/:id')
-  .post(newItemsRecord)
 
 
 app.listen(3000)

@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { query } from 'express'
+import { itemRecord, Items } from '../index.d'
+import { AnalyticRecords } from '../lib/analyticTimeUtil'
 import { UsersModel } from './usersModel'
 
 const prisma = new PrismaClient()
@@ -62,21 +64,33 @@ export class ItemsModel extends UsersModel {
 
   public static async createNewItemsRecord(userName: string, itemId: number, itemNumber: number){
     const userId = await this.getUserId(userName)
-    return await prisma.users_items.update({
-      where: {
-        id: itemId
-      },
-      data: {
-        nextBuy: 49,
-        items_records: {
-          create: {
-            number: itemNumber
-          }
-        }
-      },
-      include: {
-        items_records: true
+    await prisma.items_records.create({
+      data:{
+        itemId: itemId,
+        number: itemNumber
       }
     })
+
+    const allRecords =  await prisma.items_records.findMany({
+      where: {
+        itemId: itemId
+      }
+    }) as unknown as itemRecord[]
+
+    const nextDate = await AnalyticRecords.calculateAverage(allRecords)
+    console.log(nextDate)
+    return nextDate
+
+
+    // const updateItem = prisma.users_items.update({
+    //   where: {
+    //     id: itemId
+    //   },
+    //   data: {
+    //     nextBuy: 'hoge'
+    //   }
+    // })
+
+
   }
 }

@@ -88,7 +88,7 @@ export const newItemsRecord = async (
     if (!itemNumber || itemNumber === NaN)
       throw new Error('item name is invalid')
     const newItemsRecordData = await ItemsModel.createNewItemsRecord(userName, itemId, itemNumber)
-    res.json(newItemsRecordData)
+    res.send(newItemsRecordData)
   } catch (error) {
     console.error(error)
     res.status(400)
